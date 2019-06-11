@@ -231,8 +231,7 @@ defmodule BlockScoutWeb.API.RPC.EthController do
         if is_nil(pending_block_number) && from_block == "pending" && to_block == "pending" do
           {:error, :empty}
         else
-          {from, to} = to_block_numbers(from_block, to_block, max_block_number, pending_block_number)
-          {:ok, from, to}
+          to_block_numbers(from_block, to_block, max_block_number, pending_block_number)
         end
 
       {:block, _} ->
@@ -246,17 +245,33 @@ defmodule BlockScoutWeb.API.RPC.EthController do
   defp to_block_numbers(from_block, to_block, max_block_number, pending_block_number) do
     actual_pending_block_number = pending_block_number || max_block_number
 
-    from = to_block_number(from_block, max_block_number, actual_pending_block_number)
-    to = to_block_number(to_block, max_block_number, actual_pending_block_number)
-
-    {from, to}
+    with {:ok, from} <- to_block_number(from_block, max_block_number, actual_pending_block_number),
+         {:ok, to} <- to_block_number(to_block, max_block_number, actual_pending_block_number) do
+      {:ok, from, to}
+    end
   end
 
-  defp to_block_number(integer, _, _) when is_integer(integer), do: integer
-  defp to_block_number("latest", max_block_number, _), do: max_block_number || 0
-  defp to_block_number("earliest", _, _), do: 0
-  defp to_block_number("pending", max_block_number, nil), do: max_block_number || 0
-  defp to_block_number("pending", _, pending), do: pending
+  defp to_block_number(integer, _, _) when is_integer(integer), do: {:ok, integer}
+  defp to_block_number("latest", max_block_number, _), do: {:ok, max_block_number || 0}
+  defp to_block_number("earliest", _, _), do: {:ok, 0}
+  defp to_block_number("pending", max_block_number, nil), do: {:ok, max_block_number || 0}
+  defp to_block_number("pending", _, pending), do: {:ok, pending}
+
+  defp to_block_number("0x" <> number, _, _) do
+    case Integer.parse(number, 16) do
+      {integer, ""} -> {:ok, integer}
+      _ -> {:error, "invalid block number"}
+    end
+  end
+
+  defp to_block_number(number, _, _) when is_bitstring(number) do
+    case Integer.parse(number, 16) do
+      {integer, ""} -> {:ok, integer}
+      _ -> {:error, "invalid block number"}
+    end
+  end
+
+  defp to_block_number(_, _, _), do: {:error, "invalid block number"}
 
   defp max_non_consensus_block_number(max) do
     case Chain.max_non_consensus_block_number(max) do
