@@ -29,6 +29,8 @@ defmodule BlockScoutWeb.API.RPC.EthController do
     3 => "fourth"
   }
 
+  def methods, do: @methods
+
   def eth_request(%{body_params: %{"_json" => requests}} = conn, _) when is_list(requests) do
     responses = responses(requests)
 
