@@ -1,6 +1,8 @@
 ## Current
+
 ### Features
 - [#2182](https://github.com/poanetwork/blockscout/pull/2182) - add market history cache
+- [#2190](https://github.com/poanetwork/blockscout/pull/2190) - show all token transfers
 
 ### Features
 - [#2109](https://github.com/poanetwork/blockscout/pull/2109) - use bigger updates instead of `Multi` transactions in BlocksTransactionsMismatch
