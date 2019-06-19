@@ -54,6 +54,9 @@
 - [#2167](https://github.com/poanetwork/blockscout/pull/2168) - feat: document eth rpc api mimicking endpoints 
 - [#2196](https://github.com/poanetwork/blockscout/pull/2196) - Nethermind client fixes
 - [#2198](https://github.com/poanetwork/blockscout/pull/2198) - reduce transaction status constraint
+- [#2167](https://github.com/poanetwork/blockscout/pull/2168) - feat: document eth rpc api mimicking endpoints
+- [#2198](https://github.com/poanetwork/blockscout/pull/2198) - reduce transaction status constraint
+- [#2198](https://github.com/poanetwork/blockscout/pull/2198) - reduce transaction status and error constraint
 
 ### Chore
 - [#2127](https://github.com/poanetwork/blockscout/pull/2127) - use previouse chromedriver version
